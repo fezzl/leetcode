@@ -500,7 +500,7 @@ var twoSum = function(nums, target) {
   }
 }
 ```
-
+题目：
 给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？请你找出所有满足条件且不重复的三元组。
 
 注意：答案中不可以包含重复的三元组。
@@ -547,7 +547,7 @@ var threeSum = function(nums) {
 }
 
 ```
-
+题目：
 给定一个二叉树，判断其是否是一个有效的二叉搜索树。
 
 假设一个二叉搜索树具有如下特征：
@@ -591,7 +591,7 @@ var isValidBST = function(root) {
   return helper(root)
 }
 ```
-
+题目：
 给定一个二叉树, 找到该树中两个指定节点的最近公共祖先。
 
 百度百科中最近公共祖先的定义为：“对于有根树 T 的两个结点 p、q，最近公共祖先表示为一个结点 x，满足 x 是 p、q 的祖先且 x 的深度尽可能大（一个节点也可以是它自己的祖先）。”
@@ -623,5 +623,71 @@ var lowestCommonAncestor = function(root, p, q) {
   let left = lowestCommonAncestor(root.left, p, q)
   let right = lowestCommonAncestor(root.right, p, q)
   return left === null ? right : right === null ? left : root
+}
+```
+题目：
+实现 pow(x, n) ，即计算 x 的 n 次幂函数。
+
+示例1：
+```
+输入: 2.00000, 10
+输出: 1024.00000
+```
+示例2：
+```
+输入: 2.00000, -2
+输出: 0.25000
+解释: 2-2 = 1/22 = 1/4 = 0.25
+```
+
+```js
+// 分治算法，时间复杂度O(logN)
+var myPow = function(x, n) {
+  if (n === 0) return 1
+  if (n < 0) retrn myPow(x, -n)
+  if (n % 2) {
+    return x * myPow(x, n - 1)
+  } else {
+    return myPow(x*x, n/2)
+  }
+}
+```
+
+题目：
+给定一个大小为 n 的数组，找到其中的多数元素。多数元素是指在数组中出现次数大于 ⌊ n/2 ⌋ 的元素。
+
+你可以假设数组是非空的，并且给定的数组总是存在多数元素。
+
+示例1：
+```
+输入: [3,2,3]
+输出: 3
+```
+
+示例2：
+```
+输入: [2,2,1,1,1,2,2]
+输出: 2
+```
+
+```js
+var majorityElement = function(nums) {
+  let map = {}
+  for (let i = 0; i < nums.length; i++) {
+    if (nums[i] in map) {
+      map[nums[i]] += 1
+    } else {
+      map[nums[i]] = 1
+    }
+  }
+  let max = 0
+  let res = null
+  for (let key in map) {
+    if (map[key] > max) {
+      max = map[key]
+      res = key
+    }
+  }
+  if (max > nums.length/2) return res
 }
 ```
