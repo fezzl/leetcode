@@ -691,3 +691,205 @@ var majorityElement = function(nums) {
   if (max > nums.length/2) return res
 }
 ```
+
+题目：
+给定一个数组，它的第 i 个元素是一支给定股票第 i 天的价格。
+
+设计一个算法来计算你所能获取的最大利润。你可以尽可能地完成更多的交易（多次买卖一支股票）。
+
+注意：你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。
+
+实例：
+```
+输入: [7,1,5,3,6,4]
+输出: 7
+解释: 在第 2 天（股票价格 = 1）的时候买入，在第 3 天（股票价格 = 5）的时候卖出, 这笔交易所能获得利润 = 5-1 = 4 。
+     随后，在第 4 天（股票价格 = 3）的时候买入，在第 5 天（股票价格 = 6）的时候卖出, 这笔交易所能获得利润 = 6-3 = 3 。
+
+```
+
+```js
+// 贪心算法
+var maxProfit = function(prices) {
+  let profit = 0
+  for (let i = 1; i < prices.length; i++) {
+    let tmp = prices[i] - prices[i - 1]
+    if (tmp > 0) profit += tmp
+  }
+  return profit
+}
+```
+题目：
+给你一个二叉树，请你返回其按 层序遍历 得到的节点值。 （即逐层地，从左到右访问所有节点）
+
+示例：
+```
+    3
+   / \
+  9  20
+    /  \
+   15   7
+```
+返回其层次遍历的结果：
+```
+[
+  [3],
+  [9,20],
+  [15,7]
+]
+```
+
+```js
+// BFS
+var levelOrder = function(root) {
+    let queue = []
+    let res = []
+    if (root !== null) queue.push(root)
+    while (queue.length > 0) {
+        let val = []
+        let size = queue.length
+        for (let i = 0; i < size; i++) {
+            let node = queue.shift()
+            val.push(node.val)
+            if (node.left !== null) queue.push(node.left)
+            if (node.right !== null) queue.push(node.right)
+        }
+        res.push(val)
+    }
+    return res
+};
+```
+
+题目：
+给定一个二叉树，找出其最大深度。
+
+二叉树的深度为根节点到最远叶子节点的最长路径上的节点数。
+
+说明: 叶子节点是指没有子节点的节点。
+
+示例：
+给定二叉树 [3,9,20,null,null,15,7],
+```
+   3
+   / \
+  9  20
+    /  \
+   15   7
+```
+返回它的最大深度 3
+
+```js
+// DFS
+var maxDeth = function(root) {
+  if (root === null) return 0
+  if (root.left === null) return 1 + maxDeth(root.right)
+  if (root.right === null) return 1 + maxDeth(root.left)
+
+  return 1 + Math.max(maxDeth(root.left), maxDeth(root.right))
+}
+```
+
+题目：
+数字 n 代表生成括号的对数，请你设计一个函数，用于能够生成所有可能的并且 有效的 括号组合。
+
+示例：
+```
+输入：n = 3
+输出：[
+       "((()))",
+       "(()())",
+       "(())()",
+       "()(())",
+       "()()()"
+     ]
+```
+
+```js
+var generateParenthesis = function(n) {
+    let list = []
+    const dfs = function(left, right, n, result){
+        if (left === n && right === n) {
+            list.push(result)
+            return
+        }
+        if (left < n) dfs(left + 1, right, n, result + '(')
+        if (left > right && right < n) dfs(left, right + 1, n, result + ')')
+    }
+    dfs(0,0,n,'')
+    return list
+};
+```
+
+题目：
+n 皇后问题研究的是如何将 n 个皇后放置在 n×n 的棋盘上，并且使皇后彼此之间不能相互攻击。
+
+给定一个整数 n，返回所有不同的 n 皇后问题的解决方案。
+
+每一种解法包含一个明确的 n 皇后问题的棋子放置方案，该方案中 'Q' 和 '.' 分别代表了皇后和空位。
+
+示例：
+```
+输入: 4
+输出: [
+ [".Q..",  // 解法 1
+  "...Q",
+  "Q...",
+  "..Q."],
+
+ ["..Q.",  // 解法 2
+  "Q...",
+  "...Q",
+  ".Q.."]
+]
+解释: 4 皇后问题存在两个不同的解法。
+
+```
+
+```js
+var solveNQueens = function(n) {
+  if (n < 1) return []
+  let result = []
+  let cols = new Set()
+  let pie = new Set()
+  let na = new Set()
+  
+  const dfs = function(row, n, cur_state) {
+    if (row >= n) {
+      result.push(cur_state)
+      return
+    }
+    for (let col = 0; col < n; col++) {
+      if (cols.has(col) || pie.has(row + col) || na.has(row - col)) continue
+
+      cols.add(col)
+      pie.add(row + col)
+      na.add(row - col)
+
+      dfs(row + 1, n, cur_state.concat([col]))
+
+      cols.delete(col)
+      pie.delete(row + col)
+      na.delete(row - col)
+    }
+  }
+  dfs(0, n, [])
+  return gen_result(result,n)
+}
+
+var gen_result = function(res, n) {
+  let list = []
+  for (let i = 0; i < res.length; i++) {
+    let item = []
+    for (let j = 0; j < res[i].length; j++) {
+      let str = ''
+      for (let k = 0; k < n; k++) {
+        if (res[i][j] === k) str += 'Q'
+        else str += '.'
+      }
+      item.push(str)
+    }
+    list.push(item)
+  }
+  return list
+}
+```
