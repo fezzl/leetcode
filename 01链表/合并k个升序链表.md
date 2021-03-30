@@ -42,6 +42,8 @@ var mergeKLists = function (lists) {
 ```
 
 2. 分治
+   时间复杂度 O(kn\*logk)
+   空间复杂度 O(logk)
 
 ```js
 var mergeKLists = function (lists) {
